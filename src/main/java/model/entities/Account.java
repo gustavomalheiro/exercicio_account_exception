@@ -1,5 +1,7 @@
 package model.entities;
 
+import model.exceptions.DomainException;
+
 public class Account {
 
     private Integer number;
@@ -49,7 +51,20 @@ public class Account {
         balance += amount;
     }
 
-    public void withdraw(Double amount) {
+    // como não estamos tratando aqui ainda, temos que avisar na assinatura do método que estamos jogando pro método de cima
+    public void withdraw(Double amount) throws DomainException {
+        validateWithdraw(amount);
         balance -= amount;
+    }
+
+    // criando um método privado apenas para validar se o saque pode ser feito
+    private void validateWithdraw(Double amount) throws DomainException  {
+
+        if (withdrawLimit < amount) {
+            throw new DomainException("The amount exceeds withdraw limit");
+        }
+        if (balance < amount) {
+            throw new DomainException("Not enough balance");
+        }
     }
 }

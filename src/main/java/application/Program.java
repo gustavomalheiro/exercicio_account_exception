@@ -1,15 +1,45 @@
 package application;
 
 import model.entities.Account;
+import model.exceptions.DomainException;
+import java.util.Locale;
+import java.util.Scanner;
 
 public class Program {
     public static void main(String[] args) {
 
-        System.out.println("Hello World!");
+        Scanner sc = new Scanner(System.in);
+        Locale.setDefault(Locale.US);
 
-        Account account = new Account(8021, "Gustavo", 1000.00, 200.00);
+        try {
+            System.out.println("Enter account data:");
+            System.out.print("Number: ");
+            int number = sc.nextInt();
+            System.out.print("Holder: ");
+            sc.nextLine();
+            String holder = sc.nextLine();
+            System.out.print("Initial balance: ");
+            double initialBalance = sc.nextDouble();
+            System.out.print("Withdraw limit: ");
+            double withdrawLimit = sc.nextDouble();
 
-        System.out.println(account.getBalance());
+            Account account = new Account(number, holder, initialBalance, withdrawLimit);
 
+            System.out.println("");
+
+            System.out.print("Enter the amount for withdraw: ");
+            double amount = sc.nextDouble();
+
+            account.withdraw(amount);
+
+            System.out.printf("New balance: $ %.2f%n", account.getBalance());
+
+        } catch (DomainException e) {
+            System.out.println("Withdraw error: " + e.getMessage());
+        } catch (RuntimeException e) {
+            System.out.println("Unexpected error!");
+        } finally {
+            sc.close();
+        }
     }
 }
